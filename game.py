@@ -1,21 +1,10 @@
+from random import choice
+
 icons = {
     "blank": ["      ", "      ", "      ", "      ", "      "],
     "o": [" **** ", "*    *", "*    *", "*    *", " **** "],
     "ex":   ["*    *", " *  * ", "  **  ", " *  * ", "*    *"]
 }
-
-
-class bcolors:
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    GREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 
 
 def blank_square():
@@ -97,8 +86,8 @@ def main_menu():
                   "Menu:",
                   "1: 1 Player",
                   "2: 2 Player",
-                  "3: Help",
-                  "4: Testing",
+                  "3: Computer vs Computer",
+                  "4: Help",
                   " ",
                   "0: Exit",
                   width=50, header=True)
@@ -108,9 +97,12 @@ def player_setup(players):
     if players == 1:
         p1 = input("Whats the Name for Player 1?: ")
         p2 = "Computer"
-    else:
+    elif players == 2:
         p1 = input("Whats the Name for Player 1?: ")
         p2 = input("Whats the Name for Player 2?: ")
+    elif players == 3:
+        p1 = "Computer1"
+        p2 = "Computer2"
 
     players_data["player1"]["name"], players_data["player2"]["name"] = p1, p2
 
@@ -119,7 +111,7 @@ def validate_move(player_choice, x):
     if player_choice > 9:
         print("Please Enter a number Between 1 and 9")
         return False
-    if game_grid_data[player_choice - 1]["item"] == icons['blank']:
+    if player_choice in available_moves():
         game_grid_data[player_choice - 1]["item"] = players_data[f"player{x}"]["token"]
         return True
     else:
@@ -129,30 +121,34 @@ def validate_move(player_choice, x):
 
 def game(players):
     playing = True
-    round = 1
-    while playing:
+    turns = 0
+    while playing is True:
         for x in range(1, 3):
+            if playing is False:
+                break
+
             grid(game_grid_data)
             player_name = players[f"player{x}"]["name"]
 
-            if player_name == "Computer":
-                print("Computer Is Moving")
-            player_choice = int(input(f"{player_name}, Your Turn: "))
-            validated = validate_move(player_choice, x)
-
-            while validated is False:
-                player_choice = int(input(f"{player_name}, Your Turn: "))
+            if player_name == "Computer1" or player_name == "Computer2":
+                player_choice = choice(available_moves())
                 validated = validate_move(player_choice, x)
-            grid(game_grid_data)
+            else:
+                validated = False
+                while validated is False:
+                    player_choice = int(input(f"{player_name}, Your Turn: "))
+                    validated = validate_move(player_choice, x)
 
-            round += 1
-            if round > 3:
-                continue
-                result = win_or_lose()
-                playing = result
-            elif round == 10:
-                print("Tie Break")
+            turns += 1
+            result, winner = win_or_lose(players, x, turns)
+            grid(game_grid_data)
+            if result is True:
+                if winner is None:
+                    print("Tie Match")
+                else:
+                    print("The Winner is", winner)
                 playing = False
+                clear_grid()
                 break
 
 
@@ -173,30 +169,46 @@ def game_menu():
             player_setup(2)
             game(players_data)
         elif menu_choice == 3:
+            player_setup(3)
+            game(players_data)
+        elif menu_choice == 4:
             print("menu_choice 3")
 
 
-def win_or_lose():  # Still need to sort out
-    for i in range(0, 9, 3):
-        if icons['blank'] not in (game_grid_data[i]["item"], game_grid_data[i + 1]["item"], game_grid_data[i + 2]["item"]) and \
-           icons['ex'] is (game_grid_data[i]["item"], game_grid_data[i + 1]["item"], game_grid_data[i + 2]["item"]):
-            print("Congrats")
-            continue
-        else:
-            print("blanks in row")
-            break
-    for i in range(0, 3):
-        if icons['blank'] not in (game_grid_data[i]["item"], game_grid_data[i + 3]["item"], game_grid_data[i + 6]["item"]):
-            print("No Blanks in column")
-            continue
-        else:
-            print("blanks in column")
-            break
-    if icons['blank'] not in (game_grid_data[0]["item"], game_grid_data[4]["item"], game_grid_data[8]["item"]) or \
-       icons['ex'] not in (game_grid_data[2]["item"], game_grid_data[4]["item"], game_grid_data[6]["item"]):
-        print("No Blanks in Diagnal")
-    else:
-        print("Blanks in Diagnal")    
+def win_or_lose(players, x, turns):  # Still need to sort out
+    player_name = players[f"player{x}"]["name"]
+    player_icon = players[f"player{x}"]["token"]
+    x = 0
+    if player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 1]["item"] and player_icon is game_grid_data[x + 2]["item"] or \
+        player_icon is game_grid_data[x + 3]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 5]["item"] or \
+        player_icon is game_grid_data[x + 6]["item"] and player_icon is game_grid_data[x + 7]["item"] and player_icon is game_grid_data[x + 8]["item"]:
+        return True, player_name
+    elif player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 3]["item"] and player_icon is game_grid_data[x + 6]["item"] or \
+         player_icon is game_grid_data[x + 1]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 7]["item"] or \
+         player_icon is game_grid_data[x + 2]["item"] and player_icon is game_grid_data[x + 5]["item"] and player_icon is game_grid_data[x + 8]["item"]:
+        return True, player_name
+    elif player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 8]["item"] or \
+         player_icon is game_grid_data[x + 2]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 6]["item"]:
+        return True, player_name
+    elif turns == 9:
+        return True, None
+
+    return False, None
+
+
+def available_moves():
+    available_moves = []
+    for x in range(9):
+        if game_grid_data[x]["item"] is icons['blank']:
+            available_moves.append(x + 1)
+
+    return available_moves
+
+
+def clear_grid():
+    for x in range(9):
+        game_grid_data[x]["item"] = icons['blank']
+
 
 game_grid_data = {
     0: {"name": "top_left", "item": icons['blank']},
@@ -211,8 +223,8 @@ game_grid_data = {
 }
 
 
-p1 = "Chris"
-p2 = "Cat"
+p1 = ""
+p2 = ""
 players_data = {
     "player1": {"name": p1,
                 "token": icons["ex"]},
