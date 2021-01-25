@@ -12,12 +12,12 @@ def blank_square():
         print(i)
 
 
-def circle_basic():
+def circle():
     for i in icons["circle"]:
         print(i)
 
 
-def x_basic():
+def ex():
     for i in icons["ex"]:
         print(i)
 
@@ -30,6 +30,7 @@ def grid(game_grid):
 
     print(separators)
 
+    # Prints the Top Row of the game taking into account the icon
     for num in range(5):
         top = (outer_columns + game_grid_data[0]["item"][num] + center_columns + game_grid_data[1]["item"][num]
                + center_columns + game_grid_data[2]["item"][num] + outer_columns)
@@ -37,6 +38,7 @@ def grid(game_grid):
 
     print(separators)
 
+    # Prints the Middle Row of the game taking into account the icon
     for num in range(5):
         middle = (outer_columns + game_grid_data[3]["item"][num] + center_columns +
                   game_grid_data[4]["item"][num] + center_columns + game_grid_data[5]["item"][num] +
@@ -45,6 +47,7 @@ def grid(game_grid):
 
     print(separators)
 
+    # Prints the Bottom Row of the game taking into account the icon
     for num in range(5):
         bottom = (outer_columns + game_grid_data[6]["item"][num] + center_columns +
                   game_grid_data[7]["item"][num] + center_columns + game_grid_data[8]["item"][num] +
@@ -55,12 +58,25 @@ def grid(game_grid):
 
 
 def print_message(*message, width=50, header=True):
+    # Message: THe full message that is to be displayed on screen
+    # Width: The width of the menu on screen
+    # Header: Is the first line going to be a header aka in centre
+
+    # Screen is the blank variable to be printed out on screeen later
     screen = []
     screen.append("-" * width + "\n")
+
+    # Word Count for determining if header or not
     word_count = 1
+
+    # Iterates through the message and sorts the output to be within box
     for word in message:
+        # How many spaces are at the start before the word starts
         spacesstart = 2
+        # Works out how many spaces are at the end of the word
         spacesend = int(width - len(word) - 2 - 2)
+        # If header is True then it will iterate through the first line
+        # and output it centre in the box.
         if header is True and word_count == 1:
             spacesstart = spacesend = int((width - len(word) - 2) / 2)
             if len(word) % 2 != 0:
@@ -75,12 +91,14 @@ def print_message(*message, width=50, header=True):
         word_count += 1
     screen.append("-" * width + "\n")
 
+    # Prints out whats on screen
     for word in screen:
         for letter in word:
             print(letter, end="")
 
 
 def main_menu():
+    # Text to display on the main menu.
     print_message("Welcome To Tik Tac Toe",
                   " ",
                   "Menu:",
@@ -123,11 +141,11 @@ def game(players):
     playing = True
     turns = 0
     while playing is True:
-        for x in range(1, 3):
+        for x in range(1, 3):  # Iterates through the 2 players
             if playing is False:
                 break
 
-            grid(game_grid_data)
+            grid(game_grid_data)  # Prints out the game grid
             player_name = players[f"player{x}"]["name"]
 
             if player_name == "Computer1" or player_name == "Computer2":
@@ -142,11 +160,21 @@ def game(players):
             turns += 1
             result, winner = win_or_lose(players, x, turns)
             grid(game_grid_data)
+
             if result is True:
                 if winner is None:
-                    print("Tie Match")
+                    print_message(
+                        " ",
+                        "Tie Match",
+                        " ",
+                        width=20, header=False)
                 else:
-                    print("The Winner is", winner)
+                    print_message(
+                        " ",
+                        f"The Winner is {winner}",
+                        " ",
+                        width=30, header=False
+                    )
                 playing = False
                 clear_grid()
                 break
@@ -155,41 +183,53 @@ def game(players):
 def game_menu():
     running = True
     while running:
-        # Run Menu
         main_menu()
         menu_choice = int(input("Please Choose An Option: "))
+
         if menu_choice == 0:
             print("Thank You For Playing")
             print("Goodbye")
             break
+
         elif menu_choice == 1:
             player_setup(1)
             game(players_data)
+
         elif menu_choice == 2:
             player_setup(2)
             game(players_data)
+
         elif menu_choice == 3:
             player_setup(3)
             game(players_data)
+
         elif menu_choice == 4:
-            print("menu_choice 3")
+            print("menu_choice 4 - Still to be sorted")
 
 
 def win_or_lose(players, x, turns):  # Still need to sort out
     player_name = players[f"player{x}"]["name"]
     player_icon = players[f"player{x}"]["token"]
     x = 0
+
+    # Check if any Horizontal Match
     if player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 1]["item"] and player_icon is game_grid_data[x + 2]["item"] or \
         player_icon is game_grid_data[x + 3]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 5]["item"] or \
         player_icon is game_grid_data[x + 6]["item"] and player_icon is game_grid_data[x + 7]["item"] and player_icon is game_grid_data[x + 8]["item"]:
         return True, player_name
+
+    # Check if any Vertical Match
     elif player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 3]["item"] and player_icon is game_grid_data[x + 6]["item"] or \
          player_icon is game_grid_data[x + 1]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 7]["item"] or \
          player_icon is game_grid_data[x + 2]["item"] and player_icon is game_grid_data[x + 5]["item"] and player_icon is game_grid_data[x + 8]["item"]:
         return True, player_name
+
+    # Check if any Diagnal Match
     elif player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 8]["item"] or \
          player_icon is game_grid_data[x + 2]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 6]["item"]:
         return True, player_name
+
+    # If 9 turns (which is all moves) Then End Game
     elif turns == 9:
         return True, None
 
@@ -222,7 +262,6 @@ game_grid_data = {
     8: {"name": "bottom_right", "item": icons['blank']}
 }
 
-
 p1 = ""
 p2 = ""
 players_data = {
@@ -231,4 +270,5 @@ players_data = {
     "player2": {"name": p2,
                 "token": icons["o"]}}
 
+# Activate The Game
 game_menu()
