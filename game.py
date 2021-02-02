@@ -32,26 +32,29 @@ def grid(game_grid):
 
     # Prints the Top Row of the game taking into account the icon
     for num in range(5):
-        top = (outer_columns + game_grid_data[0]["item"][num] + center_columns + game_grid_data[1]["item"][num]
-               + center_columns + game_grid_data[2]["item"][num] + outer_columns)
+        top = (outer_columns + game_grid_data[0]["item"][num] + center_columns
+               + game_grid_data[1]["item"][num] + center_columns
+               + game_grid_data[2]["item"][num] + outer_columns)
         print(top)
 
     print(separators)
 
     # Prints the Middle Row of the game taking into account the icon
     for num in range(5):
-        middle = (outer_columns + game_grid_data[3]["item"][num] + center_columns +
-                  game_grid_data[4]["item"][num] + center_columns + game_grid_data[5]["item"][num] +
-                  outer_columns)
+        middle = (outer_columns + game_grid_data[3]["item"][num]
+                  + center_columns + game_grid_data[4]["item"][num]
+                  + center_columns + game_grid_data[5]["item"][num]
+                  + outer_columns)
         print(middle)
 
     print(separators)
 
     # Prints the Bottom Row of the game taking into account the icon
     for num in range(5):
-        bottom = (outer_columns + game_grid_data[6]["item"][num] + center_columns +
-                  game_grid_data[7]["item"][num] + center_columns + game_grid_data[8]["item"][num] +
-                  outer_columns)
+        bottom = (outer_columns + game_grid_data[6]["item"][num]
+                  + center_columns + game_grid_data[7]["item"][num]
+                  + center_columns + game_grid_data[8]["item"][num]
+                  + outer_columns)
         print(bottom)
 
     print(separators)
@@ -130,7 +133,8 @@ def validate_move(player_choice, x):
         print("Please Enter a number Between 1 and 9")
         return False
     if player_choice in available_moves():
-        game_grid_data[player_choice - 1]["item"] = players_data[f"player{x}"]["token"]
+        game_grid_data[player_choice - 1]["item"] = \
+            players_data[f"player{x}"]["token"]
         return True
     else:
         print("This Space is Already Taken")
@@ -204,7 +208,7 @@ def game_menu():
             game(players_data)
 
         elif menu_choice == 4:
-            print("menu_choice 4 - Still to be sorted")
+            menu_help()
 
 
 def win_or_lose(players, x, turns):  # Still need to sort out
@@ -213,20 +217,36 @@ def win_or_lose(players, x, turns):  # Still need to sort out
     x = 0
 
     # Check if any Horizontal Match
-    if player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 1]["item"] and player_icon is game_grid_data[x + 2]["item"] or \
-        player_icon is game_grid_data[x + 3]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 5]["item"] or \
-        player_icon is game_grid_data[x + 6]["item"] and player_icon is game_grid_data[x + 7]["item"] and player_icon is game_grid_data[x + 8]["item"]:
+    if player_icon is game_grid_data[x]["item"] and player_icon is \
+            game_grid_data[x + 1]["item"] and player_icon is \
+            game_grid_data[x + 2]["item"] or player_icon is \
+            game_grid_data[x + 3]["item"] and player_icon is \
+            game_grid_data[x + 4]["item"] and player_icon is \
+            game_grid_data[x + 5]["item"] or player_icon is \
+            game_grid_data[x + 6]["item"] and player_icon is \
+            game_grid_data[x + 7]["item"] and player_icon is \
+            game_grid_data[x + 8]["item"]:
         return True, player_name
 
     # Check if any Vertical Match
-    elif player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 3]["item"] and player_icon is game_grid_data[x + 6]["item"] or \
-         player_icon is game_grid_data[x + 1]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 7]["item"] or \
-         player_icon is game_grid_data[x + 2]["item"] and player_icon is game_grid_data[x + 5]["item"] and player_icon is game_grid_data[x + 8]["item"]:
+    elif player_icon is game_grid_data[x]["item"] and player_icon is \
+            game_grid_data[x + 3]["item"] and player_icon is \
+            game_grid_data[x + 6]["item"] or player_icon is \
+            game_grid_data[x + 1]["item"] and player_icon is \
+            game_grid_data[x + 4]["item"] and player_icon is \
+            game_grid_data[x + 7]["item"] or player_icon is \
+            game_grid_data[x + 2]["item"] and player_icon is \
+            game_grid_data[x + 5]["item"] and player_icon is \
+            game_grid_data[x + 8]["item"]:
         return True, player_name
 
     # Check if any Diagnal Match
-    elif player_icon is game_grid_data[x]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 8]["item"] or \
-         player_icon is game_grid_data[x + 2]["item"] and player_icon is game_grid_data[x + 4]["item"] and player_icon is game_grid_data[x + 6]["item"]:
+    elif player_icon is game_grid_data[x]["item"] and player_icon is \
+            game_grid_data[x + 4]["item"] and player_icon is \
+            game_grid_data[x + 8]["item"] or player_icon is \
+            game_grid_data[x + 2]["item"] and player_icon is \
+            game_grid_data[x + 4]["item"] and player_icon is \
+            game_grid_data[x + 6]["item"]:
         return True, player_name
 
     # If 9 turns (which is all moves) Then End Game
@@ -248,6 +268,27 @@ def available_moves():
 def clear_grid():
     for x in range(9):
         game_grid_data[x]["item"] = icons['blank']
+
+
+def menu_help():
+    # Text to display on the main menu.
+    print_message(
+        "Help",
+        " ",
+        "To Play Tic Tac Toe:",
+        "At the menu choose 1 Player or 2 Player",
+        "if choosing 1 player, You will play against the Computer",
+        " ",
+        "Once in the game.",
+        "Choose a square number:",
+        "Squares are numbered 1 - 9 from top left to bottom right,",
+        "Going Horizontal",
+        " ",
+        "The winner is Determined when there is 3 in a row "
+        "or a diagonal",
+        width=78, header=True)
+
+    input("Press Enter To Continue")
 
 
 game_grid_data = {
