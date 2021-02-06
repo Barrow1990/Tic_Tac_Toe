@@ -1,9 +1,20 @@
+# This program is a Game of Tic Tac Toe.
+
 from random import choice
 
 icons = {
     "blank": ["      ", "      ", "      ", "      ", "      "],
     "o": [" **** ", "*    *", "*    *", "*    *", " **** "],
-    "ex":   ["*    *", " *  * ", "  **  ", " *  * ", "*    *"]
+    "ex":   ["*    *", " *  * ", "  **  ", " *  * ", "*    *"],
+    1: ["  **  ", "  **  ", "  **  ", "  **  ", "  **  "],
+    2: ["******", "   ** ", "  **  ", " **   ", "******"],
+    3: ["******", "    **", "  ****", "    **", "******"],
+    4: ["    * ", "  * * ", " *  * ", "******", "    * "],
+    5: ["******", "**    ", "******", "    **", "******"],
+    6: ["*     ", "*     ", "******", "*    *", "******"],
+    7: ["******", "    * ", "   *  ", "  *   ", " *    "],
+    8: ["******", "*    *", "******", "*    *", "******"],
+    9: ["******", "*    *", "******", "     *", "     *"]
 }
 
 
@@ -259,7 +270,7 @@ def win_or_lose(players, x, turns):  # Still need to sort out
 def available_moves():
     available_moves = []
     for x in range(9):
-        if game_grid_data[x]["item"] is icons['blank']:
+        if game_grid_data[x]["item"] is icons[x + 1]:
             available_moves.append(x + 1)
 
     return available_moves
@@ -292,15 +303,15 @@ def menu_help():
 
 
 game_grid_data = {
-    0: {"name": "top_left", "item": icons['blank']},
-    1: {"name": "top_middle", "item": icons['blank']},
-    2: {"name": "top_right", "item": icons['blank']},
-    3: {"name": "middle_left", "item": icons['blank']},
-    4: {"name": "middle_middle", "item": icons['blank']},
-    5: {"name": "middle_right", "item": icons['blank']},
-    6: {"name": "bottom_left", "item": icons['blank']},
-    7: {"name": "bottom_middle", "item": icons['blank']},
-    8: {"name": "bottom_right", "item": icons['blank']}
+    0: {"name": "top_left", "item": icons[1]},
+    1: {"name": "top_middle", "item": icons[2]},
+    2: {"name": "top_right", "item": icons[3]},
+    3: {"name": "middle_left", "item": icons[4]},
+    4: {"name": "middle_middle", "item": icons[5]},
+    5: {"name": "middle_right", "item": icons[6]},
+    6: {"name": "bottom_left", "item": icons[7]},
+    7: {"name": "bottom_middle", "item": icons[8]},
+    8: {"name": "bottom_right", "item": icons[9]}
 }
 
 p1 = ""
