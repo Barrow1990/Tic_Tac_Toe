@@ -202,7 +202,7 @@ def game_menu():
         menu_choice = int(input("Please Choose An Option: "))
 
         if menu_choice == 0:
-            print("Thank You For Playing")
+            print("Thank You For Playing\nGoodbye")
             print("Goodbye")
             break
 
