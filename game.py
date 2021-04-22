@@ -1,4 +1,5 @@
 # This program is a Game of Tic Tac Toe.
+# It was produced during PCEP Certification
 
 from random import choice
 
